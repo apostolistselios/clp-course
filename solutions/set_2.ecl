@@ -1,4 +1,5 @@
-%%% sumn/2
+
+%%% Exercise 7: sumn/2
 %%% computes the sum of the first n natural numbers recursively.
 sumn(1, 1).
 

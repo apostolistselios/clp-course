@@ -1,3 +1,4 @@
+%%% Exercise 5
 %%% figure/2
 figure(1, middle(triangle, square)). % triangle in the middle of a circle.
 figure(2, middle(circle, triangle)). % circle in the middle of a triangle.
