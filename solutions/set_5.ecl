@@ -18,6 +18,25 @@ set_diff([_|Tail1], List, Tail2) :-
     set_diff(Tail1, List, Tail2).
 
 /* ----------------------------------
+Exercise 3 - lunion/3
+lunion(List1, List2, List3):
+A Prolog program that finds the union of List1 and List2.
+1st argument/List1: A given list.
+2nd argument/List2: A given list.
+3rd argument/List3: The union of the two given lists.
+------------------------------------- */
+
+lunion([], Union, Union).
+
+lunion([X|Tail], List, Union) :- 
+    member(X, List), 
+    !,
+    lunion(Tail, List, Union).
+
+lunion([X|Tail], List, [X|Union]) :-
+    lunion(Tail, List, Union).
+
+/* ----------------------------------
 Exercise 4 - max_list/2
 max_list(Max, List): 
 A Prolog program that finds the max element in a List using not/1 and member/2.
@@ -55,9 +74,28 @@ implements the Operation on every element of the given List.
 double(X, R) :- R is 2 * X.
 square(X, R) :- R is X * X.
 
-map(_, [], []).
+map(_Operation, [], []).
 
 map(Operation, [X|Tail], [R|ResTail]) :-  
     Predicate =.. [Operation, X, R],
     call(Predicate),
     map(Operation, Tail, ResTail).
+
+/* ----------------------------------
+Exercise 8 - reduce/3
+reduce(Operation, List, Result):
+A Prolog program that implements the reduce function. Given an Operation
+implements the Operation on every element of the given list and stores the
+result on Result.
+1st argument/Operation: The operation to implement 
+                        (max/3, min/3, plus/3, times/3 implemented by EcliPSe Prolog).
+2nd argument/List: A given list of integers.
+3rd argument/List: The result of the operation.
+------------------------------------- */
+
+reduce(_Operation, [Last|[]], Last).
+
+reduce(Operation, [X|Tail], Result) :-
+    reduce(Operation, Tail, Temp),
+    Predicate =.. [Operation, X, Temp, Result],
+    call(Predicate).
