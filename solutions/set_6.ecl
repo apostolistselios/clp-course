@@ -54,3 +54,21 @@ proper_set_s(List) :-
     ListLen is length(List), 
     SetLen is length(Set),
     ListLen = SetLen.
+
+/* ----------------------------------
+Exercise 5 - map_f/3
+map_f(Operation, List, Results):
+A Prolog program that implements the map function using the built-in 
+predicate findall/3.
+1st argument/Operation: an operation that is going to be applied on the list elements.
+2nd argument/List: a given list.
+3rd argument/Results: the results of the map function.
+------------------------------------- */
+
+%%% some operations
+double(X, R) :- R is 2 * X.
+square(X, R) :- R is X * X.
+
+map_f(Operation, List, Results) :-
+    Predicate =.. [Operation, X, R],
+    findall(R, (member(X, List), call(Predicate)), Results).
