@@ -120,29 +120,55 @@ Exercise 7 - Practise defining operators
 Arg1 and Arg2 :- Arg1, Arg2.
 
 %%% nand operator definition.
-Arg1 nand Arg2 :- 
-    --(Arg1 and Arg2).
+Arg1 nand Arg2 :- --(Arg1 and Arg2).
 
 %%% or operator definition.
 Arg1 or _Arg2 :- Arg1.  
 _Arg1 or Arg2 :- Arg2.
 
 %%% xor operator definition.
-Arg1 xor Arg2 :- 
-    (Arg1 or Arg2) and --(Arg1 and Arg2).
+Arg1 xor Arg2 :- Arg1, --Arg2.
+Arg1 xor Arg2 :- --Arg1, Arg2.
 
 %%% not operator definition.
-Arg1 nor Arg2 :- 
-    --(Arg1 or Arg2).
+Arg1 nor Arg2 :- --(Arg1 or Arg2).
 
 %%% implied operator definition/==>.
-Arg1 ==> Arg2 :- 
-    -- Arg1 or Arg2.
+Arg1 ==> Arg2 :- Arg1 or --Arg2.
 
 %%% truth values
 t.
 f :- !, fail.
 
 /* ----------------------------------
-Exercise 8 - 
+Exercise 8 - model/1, theory/1
+model(Expr), theory(ExprList):
+A Prolog program that accepts variables in expression of propositional 
+logic (model/1) and calculates them (theory/1).
+
+Expr: a propositional logic expression.
+ListExpr: a list of propositional logic expressions.
 ------------------------------------- */
+
+%%% reduce/1
+reduce([Arg]) :- 
+    member(Arg, [t, f]).
+
+reduce([Arg|Args]) :- 
+    member(Arg, [t, f]), 
+    reduce(Args).
+
+%%% model/1
+model(Expr) :- 
+    term_variables(Expr, Args),
+    reduce(Args),
+    call(Expr).
+
+%%% theory/1
+theory([E1, E2]) :- 
+    Expression =.. [and, E1, E2],
+    model(Expression).
+
+theory([E1, E2|Expressions]) :- 
+    Expression =.. [and, E1, E2],
+    theory([Expression|Expressions]).
