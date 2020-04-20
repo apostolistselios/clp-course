@@ -150,25 +150,29 @@ Expr: a propositional logic expression.
 ListExpr: a list of propositional logic expressions.
 ------------------------------------- */
 
-%%% reduce/1
-reduce([Arg]) :- 
-    member(Arg, [t, f]).
+%%% assign/1
+assign([]).
 
-reduce([Arg|Args]) :- 
+assign([Arg|Args]) :- 
     member(Arg, [t, f]), 
-    reduce(Args).
+    assign(Args).
 
 %%% model/1
-model(Expr) :- 
-    term_variables(Expr, Args),
-    reduce(Args),
-    call(Expr).
+model(Expression) :- 
+    term_variables(Expression, Args),
+    assign(Args),
+    call(Expression).
 
-%%% theory/1
-theory([E1, E2]) :- 
-    Expression =.. [and, E1, E2],
-    model(Expression).
+%% theory/1
+theory([]).
 
-theory([E1, E2|Expressions]) :- 
-    Expression =.. [and, E1, E2],
-    theory([Expression|Expressions]).
+theory([Expression|Expressions]) :- 
+    model(Expression),
+    theory(Expressions).
+
+% theory([Expression]) :- 
+%     model(Expression).
+
+% theory([E1, E2|Expressions]) :- 
+%     Expression =.. [and, E1, E2],
+%     theory([Expression|Expressions]).
