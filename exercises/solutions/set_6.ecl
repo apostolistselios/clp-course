@@ -157,6 +157,13 @@ assign([Arg|Args]) :-
     member(Arg, [t, f]), 
     assign(Args).
 
+%%% Alternative solution.
+% assign([]).
+% assign([t|Rest]) :- 
+%     assign(Rest).
+% assign([f|Rest]) :-
+%     assign(Rest).
+
 %%% model/1
 model(Expression) :- 
     term_variables(Expression, Args),
@@ -170,9 +177,9 @@ theory([Expression|Expressions]) :-
     model(Expression),
     theory(Expressions).
 
+%%% Alternative solution.
 % theory([Expression]) :- 
 %     model(Expression).
-
 % theory([E1, E2|Expressions]) :- 
 %     Expression =.. [and, E1, E2],
 %     theory([Expression|Expressions]).
