@@ -41,6 +41,9 @@ double(X, Y):-Y is X * 2.
 %%% inc/2
 inc(X, Y):-Y is X + 1.
 
+%%% square/2
+square(X,Y):- Y is X * X.
+
 %%% math_match/3
 math_match([_X], _C, []).
 
@@ -66,4 +69,87 @@ math_match_alt(List, C, Solution) :-
 /* ----------------------------------
 Exercise 3 - State of Blocks 
 
+stack_blocks/3
+stack_blocks(StackA, StackB, Height)
+
+A Prolog program that builds two stacks of 3 blocks in way that when a
+block is places on top of another is has the same of less width. Each block
+has to be used once. The height of the two stacks has to be the same.
+
+find_lowest_stack/4
+find_lowest_stack(StackA, StackB, Height, Solutions)
+
+A Prolog program that finds the lowest Stacks (with the smallest Height), 
+and how many alternative solutions where computed in order to find it.
 ------------------------------------- */
+
+%%% a_block/3
+a_block(b1,2,4).
+a_block(b2,1,3).
+a_block(b3,3,3).
+a_block(b4,1,2).
+a_block(b5,4,1).
+a_block(b6,2,1).
+a_block(b7,5,3).
+a_block(b8,5,2).
+a_block(b9,4,4).
+a_block(b10,2,3).
+
+%%% all_different/3
+all_different([]).  
+
+all_different([_, []]).
+
+all_different([Element|Tail]) :- 
+    not(member(Element, Tail)), 
+    all_different(Tail).
+
+%%% width_constraint/3
+width_constraint(Width1, Width2, Width3) :-
+    Width1 >= Width2,
+    Width2 >= Width3.
+
+%%% compute_height/2.
+compute_height([], 0).
+
+compute_height([Height|RestHeights], HeightSum) :- 
+    compute_height(RestHeights, RestHeightSum), 
+    HeightSum is RestHeightSum + Height.
+
+%%% stack_blocks/3
+stack_blocks([Block_A1, Block_A2, Block_A3], [Block_B1, Block_B2, Block_B3], Height) :- 
+    % Get the information about the blocks.
+    % Stack A Blocks
+    a_block(Block_A1, Height_A1, Width_A1),
+    a_block(Block_A2, Height_A2, Width_A2),
+    a_block(Block_A3, Height_A3, Width_A3),
+    % Stack B Blocks
+    a_block(Block_B1, Height_B1, Width_B1),
+    a_block(Block_B2, Height_B2, Width_B2),
+    a_block(Block_B3, Height_B3, Width_B3),
+    % Check if all the elements are different.
+    append([Block_A1, Block_A2, Block_A3], [Block_B1, Block_B2, Block_B3], Stacks),
+    all_different(Stacks),
+    % Check the constraint about the width.
+    width_constraint(Width_A1, Width_A2, Width_A3), 
+    width_constraint(Width_B1, Width_B2, Width_B3), 
+    % Check if the height of stacks is the same.
+    HeightsA = [Height_A1, Height_A2, Height_A3],
+    HeightsB = [Height_B1, Height_B2, Height_B3],
+    compute_height(HeightsA, Height),
+    compute_height(HeightsB, Height).
+
+
+%%% alternative_solutions/3
+alternative_solutions([Solution|_Tail], Solution, 0).
+
+alternative_solutions([_Solution|Tail], Solution, AlternativeSolutions) :-
+    alternative_solutions(Tail, Solution, TailAlternativeSols),
+    AlternativeSolutions is TailAlternativeSols + 1.
+
+%%% find_lowest_stack/4
+find_lowest_stack(StackA, StackB, Height, Solutions) :- 
+    findall((H, StackA, StackB), stack_blocks(StackA, StackB, H), SolutionList),
+    setof(H, member(H, SolutionList), [(Height, StackA, StackB)|_]),
+    Solutions is length(SolutionList) - 1.
+    % alternative_solutions(SolutionList, (Height, StackA, StackB), Solutions).    
