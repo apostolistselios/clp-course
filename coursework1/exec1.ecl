@@ -95,7 +95,7 @@ a_block(b8,5,2).
 a_block(b9,4,4).
 a_block(b10,2,3).
 
-%%% all_different/3
+%%% all_different/1
 all_different([]).  
 
 all_different([_, []]).
@@ -117,18 +117,18 @@ compute_height([Height|RestHeights], HeightSum) :-
     HeightSum is RestHeightSum + Height.
 
 %%% stack_blocks/3
-stack_blocks([Block_A1, Block_A2, Block_A3], [Block_B1, Block_B2, Block_B3], Height) :- 
+stack_blocks([B_A1, B_A2, B_A3], [B_B1, B_B2, B_B3], Height) :- 
     % Get the information about the blocks.
     % Stack A Blocks
-    a_block(Block_A1, Height_A1, Width_A1),
-    a_block(Block_A2, Height_A2, Width_A2),
-    a_block(Block_A3, Height_A3, Width_A3),
+    a_block(B_A1, Height_A1, Width_A1),
+    a_block(B_A2, Height_A2, Width_A2),
+    a_block(B_A3, Height_A3, Width_A3),
     % Stack B Blocks
-    a_block(Block_B1, Height_B1, Width_B1),
-    a_block(Block_B2, Height_B2, Width_B2),
-    a_block(Block_B3, Height_B3, Width_B3),
+    a_block(B_B1, Height_B1, Width_B1),
+    a_block(B_B2, Height_B2, Width_B2),
+    a_block(B_B3, Height_B3, Width_B3),
     % Check if all the elements are different.
-    append([Block_A1, Block_A2, Block_A3], [Block_B1, Block_B2, Block_B3], Stacks),
+    append([B_A1, B_A2, B_A3], [B_B1, B_B2, B_B3], Stacks),
     all_different(Stacks),
     % Check the constraint about the width.
     width_constraint(Width_A1, Width_A2, Width_A3), 
